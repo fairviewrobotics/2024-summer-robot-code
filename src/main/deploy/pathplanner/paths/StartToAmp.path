@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.0931793807979797,
+        "y": 6.612034802767299
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.5594061326959279,
+        "y": 6.648853117144668
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.225342547907318,
+        "y": 6.537032333323926
+      },
+      "prevControl": {
+        "x": 1.758106261582894,
+        "y": 6.4085245392713
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 36.333210825623866,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 34.90810341449661,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "FarAmpStuff",
+  "previewStartingState": null,
+  "useDefaultConstraints": true
+}
