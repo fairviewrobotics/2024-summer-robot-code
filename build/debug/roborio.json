@@ -1,9 +1,0 @@
-[
-  {
-    "type": "java",
-    "name": "frcJava",
-    "port": 8349,
-    "target": "10.20.36.2",
-    "project": "2024-robot-code-daniel"
-  }
-]
