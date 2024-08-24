@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.9310600287867244,
+        "y": 4.440407482666817
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.397286780684673,
+        "y": 4.477225797044186
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.178488273643214,
+        "y": 4.665117969124827
+      },
+      "prevControl": {
+        "x": 1.779484637672979,
+        "y": 4.6465306588020585
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": -38.74819187504094,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 180.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -38.59708711930484,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "FarSourceStuff",
+  "previewStartingState": null,
+  "useDefaultConstraints": true
+}
