@@ -11,6 +11,7 @@ import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.SwerveUtils;
 
 import java.util.function.DoubleSupplier;
 
@@ -18,8 +19,7 @@ public class RotateToSpeakerAndDriveCommand extends Command {
     private final SwerveSubsystem swerveSubsystem;
     private final DoubleSupplier forward;
     private final DoubleSupplier sideways;
-    private final DoubleSupplier radians;
-    private final double odometryRotation;
+    private Pose2d speakerPose;
 
     private final ProfiledPIDController rotationPID = new ProfiledPIDController(
             VisionConstants.rotateToP,
@@ -33,37 +33,19 @@ public class RotateToSpeakerAndDriveCommand extends Command {
      * @param swerveSubsystem The instance of {@link SwerveSubsystem}
      * @param forward The desired forward percentage of the robot
      * @param sideways The desired sideways percentage of the robot
-     * @param radians The desired rotation speed of the robot
      */
-    public RotateToSpeakerAndDriveCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier forward, DoubleSupplier sideways, DoubleSupplier radians) {
+    public RotateToSpeakerAndDriveCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier forward, DoubleSupplier sideways) {
         this.swerveSubsystem = swerveSubsystem;
         this.forward = forward;
         this.sideways = sideways;
-        this.radians = radians;
 
-        //Rotation tolerance in radians
         rotationPID.setTolerance(0.05);
 
-        //Robot speed toward/away from the speaker (y-direction)
-        double robotYSpeed = swerveSubsystem.getFieldRelativeChassisSpeeds().vyMetersPerSecond;
-        //Robot speed toward/away from the speaker (x-direction)
-        double robotXSpeed = swerveSubsystem.getFieldRelativeChassisSpeeds().vxMetersPerSecond;
-        //Note speed in x-direction(forward, as opposed to up)
-        double noteSpeedX = robotXSpeed + ShooterConstants.shooterNoteSpeedX;
+        rotationPID.enableContinuousInput(-Math.PI, Math.PI);
 
-        //Getting speaker pose relative to alliance color
-        Pose2d speakerPose = (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)? ShooterConstants.speakerPoseBlue : ShooterConstants.speakerPoseRed;
-        //Current robot pose
-        Pose2d robotPose = swerveSubsystem.getPose();
+        assert DriverStation.getAlliance().isPresent();
 
-        //'Moving' speaker position based on robot speed
-        double speakerYTranslation = robotYSpeed * ((speakerPose.getX()-robotPose.getX()) / noteSpeedX);
-
-        //Calculated angle to rotate to
-        double angle = Math.atan2((speakerPose.getY() + speakerYTranslation) - robotPose.getY(), speakerPose.getX()-robotPose.getX());
-
-        //Rotation PID Calculations
-        this.odometryRotation = rotationPID.calculate(robotPose.getRotation().getRadians(), angle);
+        this.speakerPose = (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)? ShooterConstants.speakerPoseBlue : ShooterConstants.speakerPoseRed;
 
         addRequirements(swerveSubsystem);
 
@@ -72,13 +54,25 @@ public class RotateToSpeakerAndDriveCommand extends Command {
     @Override
     public void execute() {
 
+        rotationPID.setGoal(SwerveUtils.rotateToPose(swerveSubsystem.getPose(), this.speakerPose) + Math.PI);
+
+
+        //Calculated angle to rotate to
+        //Rotation PID Calculations
+        double odometryRotation = rotationPID.calculate(swerveSubsystem.getPose().getRotation().getRadians());
+
         swerveSubsystem.drive(
-                forward.getAsDouble(),
-                sideways.getAsDouble(),
+                -forward.getAsDouble(),
+                -sideways.getAsDouble(),
                 odometryRotation,
                 true,
                 true
         );
 
+    }
+
+    @Override
+    public void initialize() {
+        rotationPID.reset(swerveSubsystem.getPose().getRotation().getRadians());
     }
 }

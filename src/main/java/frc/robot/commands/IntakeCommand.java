@@ -19,6 +19,8 @@ public class IntakeCommand extends Command {
 
     private final boolean source;
 
+    private boolean gotNote = false;
+
 
 
     private final XboxController primaryController;
@@ -42,6 +44,7 @@ public class IntakeCommand extends Command {
         this.source = source;
         this.primaryController = primaryController;
         this.secondaryController = secondaryController;
+        this.gotNote = false;
 
         addRequirements(intakeSubsystem, indexerSubsystem);
     }
@@ -49,7 +52,8 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        if (indexerSubsystem.isCenter())
+        if (indexerSubsystem.isLimelight()) this.gotNote = true;
+        if (gotNote)
             ledSubsystem.setLED(0.35);
         else
             ledSubsystem.setLED(0.61);
@@ -72,29 +76,26 @@ public class IntakeCommand extends Command {
 //                }
             }
             case SPEAKER -> {
-                if (!indexerSubsystem.isCenter()) {
+                if (!gotNote) {
                     intakeSubsystem.setTopSpeed(0.4);
                     intakeSubsystem.setBottomSpeed(0.4);
-                    indexerSubsystem.rotateAllWheelsPercent(0.3);
-                } else if (indexerSubsystem.isCenter()) {
+                    indexerSubsystem.rotateAllWheelsPercent(0.2);
+                } else {
                    // intakeSubsystem.setSpeed(0);
-                    try {
-                        Thread.sleep(120);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+//                 //   try {
+//                 //       Thread.sleep(120);
+//                 //   } catch (InterruptedException e) {
+//                  //      e.printStackTrace();
+//                  //  }
+                    indexerSubsystem.rotateAllWheelsPercent(0);
+                    intakeSubsystem.setSpeed(0.0);
+                    double timePassed = Timer.getFPGATimestamp() - this.rumbleTime;
+                    System.out.println("TP: " + timePassed + " CT: " + Timer.getFPGATimestamp() + " RT: " + this.rumbleTime);
+                    if (timePassed >= 1) {
+                        System.out.println("Rumbling");
+                        primaryController.setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
+                        this.rumbleTime = Timer.getFPGATimestamp();
                     }
-                    if (indexerSubsystem.isCenter()) {
-                        indexerSubsystem.rotateAllWheelsPercent(0);
-                        intakeSubsystem.setSpeed(0.0);
-                        double timePassed = Timer.getFPGATimestamp() - this.rumbleTime;
-                        System.out.println("TP: " + timePassed + " CT: " + Timer.getFPGATimestamp() + " RT: " + this.rumbleTime);
-                        if (timePassed >= 1) {
-                            System.out.println("Rumbling");
-                            primaryController.setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
-                            this.rumbleTime = Timer.getFPGATimestamp();
-                        }
-                    }
-
                 }
             }
         }
@@ -103,6 +104,7 @@ public class IntakeCommand extends Command {
     @Override
     public void initialize() {
         rumbleTime = Timer.getFPGATimestamp();
+        gotNote = false;
     }
 
     @Override

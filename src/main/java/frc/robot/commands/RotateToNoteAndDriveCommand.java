@@ -115,6 +115,7 @@ public class RotateToNoteAndDriveCommand extends Command {
 
     @Override
     public void initialize() {
+        rotationPID.reset(swerveSubsystem.getPose().getRotation().getRadians());
 
         seeNote = VisionUtils.getNoteTV();
 

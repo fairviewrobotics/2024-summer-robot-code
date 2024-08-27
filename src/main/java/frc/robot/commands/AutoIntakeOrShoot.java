@@ -10,6 +10,7 @@ public class AutoIntakeOrShoot extends Command {
 
     private final Goal goal;
 
+    private boolean gotNote = false;
 
     public AutoIntakeOrShoot(IndexerSubsystem indexerSubsystem, IntakeSubsystem intakeSubsystem, Goal goal) {
         this.intakeSubsystem = intakeSubsystem;
@@ -20,31 +21,28 @@ public class AutoIntakeOrShoot extends Command {
 
     @Override
     public void execute() {
+        if (indexerSubsystem.isLimelight()) gotNote = true;
         switch (goal) {
             case INTAKE -> {
-                if (!indexerSubsystem.isCenter()) {
-                    intakeSubsystem.setTopSpeed(0.5);
-                    intakeSubsystem.setBottomSpeed(0.5);
-                    indexerSubsystem.rotateAllWheelsPercent(0.3);
-                } else if (indexerSubsystem.isCenter()) {
-                    // intakeSubsystem.setSpeed(0);
-                    try {
-                        Thread.sleep(105);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (indexerSubsystem.isCenter()) {
-                        indexerSubsystem.rotateAllWheelsPercent(0);
-                        intakeSubsystem.setSpeed(0.0);
-                    }
-
+                if (!gotNote) {
+                    intakeSubsystem.setSpeed(0.5);
+                    indexerSubsystem.rotateAllWheelsPercent(0.2);
+                } else  {
+                    indexerSubsystem.rotateAllWheelsPercent(0);
+                    intakeSubsystem.setSpeed(0.0);
                 }
             }
             case SHOOT -> {
-                indexerSubsystem.rotateAllWheelsPercent(1.0);
+                intakeSubsystem.setSpeed(0.5);
+                indexerSubsystem.rotateAllWheelsPercent(0.8);
 
             }
         }
+    }
+
+    @Override
+    public void initialize() {
+        gotNote = false;
     }
 
     @Override
