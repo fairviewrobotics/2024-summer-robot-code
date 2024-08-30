@@ -153,7 +153,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 this::getRobotRelativeSpeeds,
                 this::driveRobotRelative,
                 new HolonomicPathFollowerConfig(
-                        new PIDConstants(5, 0.0, 0.2), //1.8 // 2.7
+                        new PIDConstants(5.5, 0.0, 0.2), //1.8 // 2.7
                         new PIDConstants(3, 0.0, 0.2), //1.0 // 1.8
                         3, //swervesubsystem.setmodulestate
                         0.301625,//11.875 meters
@@ -198,10 +198,10 @@ public class SwerveSubsystem extends SubsystemBase {
 //        System.out.println(visionMeasurement.getX());
 //
 //        System.out.println(VisionUtils.getDistanceFromTag());
-        if (DriverStation.isAutonomous() && (Math.abs(getRobotRelativeSpeeds().vxMetersPerSecond) > 0.2 ||
-                Math.abs(getRobotRelativeSpeeds().vyMetersPerSecond) > 0.2 ||
-                Math.abs(getRobotRelativeSpeeds().omegaRadiansPerSecond) > Math.PI/6))
-            visionMeasurement = new Pose3d();
+//        if (DriverStation.isAutonomous() && (Math.abs(getRobotRelativeSpeeds().vxMetersPerSecond) > 0.2 ||
+//                Math.abs(getRobotRelativeSpeeds().vyMetersPerSecond) > 0.2 ||
+//                Math.abs(getRobotRelativeSpeeds().omegaRadiansPerSecond) > Math.PI/6))
+//            visionMeasurement = new Pose3d();
 
 //        System.out.println(getPose());
 
@@ -212,12 +212,15 @@ public class SwerveSubsystem extends SubsystemBase {
             double visionTrust = 0.075 * Math.pow(distanceToTag, 2.5);
             double rotationVisionTrust = Math.pow(distanceToTag, 2.5) / 5;
 
+            NTUtils.setDouble("Tag_Dist", distanceToTag);
+            NTUtils.setDouble("Vision_Trust", visionTrust);
+            NTUtils.setDouble("Rotation_Vision_Trust", rotationVisionTrust);
             if (distanceToTag < 3) {
                 poseEstimator.setVisionMeasurementStdDevs(
                         VecBuilder.fill(
                                 visionTrust,
                                 visionTrust,
-                                Units.degreesToRadians(20 * ((distanceToTag < 2.0) ? rotationVisionTrust : 9999))
+                                rotationVisionTrust
                         )
 
                 );
@@ -225,10 +228,10 @@ public class SwerveSubsystem extends SubsystemBase {
             } else {
 
 
-                // If we're 3 meters away, limelight is too unreliable. Don't trust it!
-//                poseEstimator.setVisionMeasurementStdDevs(
-//                        VecBuilder.fill(9999, 9999, 9999)
-//                );
+                // If we're 3+ meters away, limelight is too unreliable. Don't trust it!
+                poseEstimator.setVisionMeasurementStdDevs(
+                        VecBuilder.fill(9999, 9999, 9999)
+                );
             }
             poseEstimator.addVisionMeasurement(
                     new Pose2d(
@@ -439,9 +442,9 @@ public class SwerveSubsystem extends SubsystemBase {
         }
 
 
-        double xSpeedDelivered = xSpeedCommanded * DrivetrainConstants.maxSpeedMetersPerSecond;
-        double ySpeedDelivered = ySpeedCommanded * DrivetrainConstants.maxSpeedMetersPerSecond;
-        double rotationDelivered = currentRotation * DrivetrainConstants.maxAngularSpeed;
+        double xSpeedDelivered = xSpeedCommanded;
+        double ySpeedDelivered = ySpeedCommanded;
+        double rotationDelivered = currentRotation;
 
         // Field relative is easier for drivers I think.
         SwerveModuleState[] swerveModuleStates;

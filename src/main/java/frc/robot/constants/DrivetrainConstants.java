@@ -15,8 +15,8 @@ public class DrivetrainConstants {
     public static final double magnitudeSlewRate = 1000; // percent/second (1 = 100%) - forward/backward/traverse - was 20.0
     public static final double rotationalSlewRate = 1000; // percent/second (1 = 100%) - rotation was 50.0
 
-    public static final double drivingSpeedScalar = -1.0; //make positive so gyroreset with intake forward
-    public static final double rotationSpeedScalar = -2.0;//make positive so gyroreset with intake forward
+    public static final double drivingSpeedScalar = -4.0; //make positive so gyroreset with intake forward
+    public static final double rotationSpeedScalar = -3 * Math.PI;//make positive so gyroreset with intake forward
 
     public static final double trackWidth = Units.inchesToMeters(18);
     public static final double wheelBase = Units.inchesToMeters(22.5);

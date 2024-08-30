@@ -29,6 +29,8 @@ public class IndexerSubsystem extends SubsystemBase {
 
     private final DigitalInput centerLinebreak = new DigitalInput(IndexerConstants.centerLimebreakID);
 
+    private final DigitalInput limeLightLineBreak = new DigitalInput(9);
+
 
 
     private final BooleanEntry centerLinebreaknt = NetworkTableInstance.getDefault()
@@ -142,12 +144,20 @@ public class IndexerSubsystem extends SubsystemBase {
     }
 
     /**
-     * Check if top limebreak is seeing something
-     * @return If the limebreak is seeing something
+     * Check if top linebreak is seeing something
+     * @return If the linebreak is seeing something
      */
 //    public boolean isTop() {
 //        return !topLinebreak.get();
 //    }
+
+    /**
+     * Check if the limelight linebreak is seeing something
+     * @return If the linebreak is seeing something
+     */
+    public boolean isLimelight() {
+        return !limeLightLineBreak.get();
+    }
 
     /**
      * Get the current angle of the indexer

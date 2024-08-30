@@ -108,7 +108,15 @@ public class RobotContainer {
     );
 //
     new JoystickButton(primaryController, XboxController.Button.kX.value).whileTrue(
-            new RunCommand(() -> swerveSubsystem.setX())
+            new RotateToSpeakerAndDriveCommand(
+                    swerveSubsystem,
+                    () -> primaryController.getLeftY() * DrivetrainConstants.drivingSpeedScalar,
+                    () -> primaryController.getLeftX() * DrivetrainConstants.drivingSpeedScalar
+            )
+    );
+
+    new POVButton(primaryController, 0).whileTrue(
+            new RunCommand(() -> swerveSubsystem.drive(1.0, 0.0, 0.0, true, false))
     );
 
 //    new JoystickButton(primaryController, XboxController.Button.kA.value).whileTrue(
@@ -200,7 +208,10 @@ public class RobotContainer {
     );
 
     new JoystickButton(primaryController, XboxController.Button.kB.value).whileTrue(
-            new RotateToNoteAndDriveCommand(swerveSubsystem, secondaryController, () -> primaryController.getLeftY(), () -> primaryController.getLeftX(), () -> primaryController.getRightX(), VisionUtils.getNoteTX())
+            new RotateToNoteAndDriveCommand(swerveSubsystem, secondaryController,
+                    () -> -primaryController.getLeftY() * DrivetrainConstants.drivingSpeedScalar,
+                    () -> -primaryController.getLeftX() * DrivetrainConstants.drivingSpeedScalar,
+                    () -> primaryController.getRightX() * DrivetrainConstants.rotationSpeedScalar, VisionUtils.getNoteTX())
             //new Rotate90(swerveSubsystem)
     );
 

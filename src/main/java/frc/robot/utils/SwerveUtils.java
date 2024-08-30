@@ -10,7 +10,7 @@ public class SwerveUtils {
      * @param stepsize The maximum step size that can be taken.
      * @return The new value for `current` after performing the specified step towards the specified target.
      */
-    public static double StepTowards(double current, double target, double stepsize) {
+    public static double stepTowards(double current, double target, double stepsize) {
         if (Math.abs(current - target) <= stepsize) {
             return target;
         } else if (target < current) {
