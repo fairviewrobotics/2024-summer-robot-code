@@ -12,8 +12,8 @@ public class DrivetrainConstants {
     public static final double maxAngularSpeed = 2 * Math.PI;
 
     public static final double directionSlewRate = 20; // rads/sec - turning was 4.0
-    public static final double magnitudeSlewRate = 1000; // percent/second (1 = 100%) - forward/backward/traverse - was 20.0
-    public static final double rotationalSlewRate = 1000; // percent/second (1 = 100%) - rotation was 50.0
+    public static final double magnitudeSlewRate = 20; // percent/second (1 = 100%) - forward/backward/traverse - was 20.0
+    public static final double rotationalSlewRate = 30; // percent/second (1 = 100%) - rotation was 50.0
 
     public static final double drivingSpeedScalar = -4.0; //make positive so gyroreset with intake forward
     public static final double rotationSpeedScalar = -3 * Math.PI;//make positive so gyroreset with intake forward
@@ -28,10 +28,10 @@ public class DrivetrainConstants {
             new Translation2d(-wheelBase / 2, -trackWidth / 2)
     );
 
-    public static final double frontLeftChassisAngularOffset = 1.029 + Math.PI/2 + Math.PI;
-    public static final double frontRightChassisAngularOffset = 5.034 - Math.PI + Math.PI;
-    public static final double rearLeftChassisAngularOffset = 0.8645 + Math.PI;
-    public static final double rearRightChassisAngularOffset = 5.449 - Math.PI/2 + Math.PI;
+    public static final double frontLeftChassisAngularOffset = 1.029 + Math.PI/2 + Math.PI-0.83+Math.PI/4;
+    public static final double frontRightChassisAngularOffset = 5.034 - Math.PI;
+    public static final double rearLeftChassisAngularOffset = 0.8645 + Math.PI+1.327;
+    public static final double rearRightChassisAngularOffset = 5.449 - Math.PI/2 + Math.PI-2.153;
 
     public static final int frontLeftDrivingPort = 7;
     public static final int rearLeftDrivingPort = 5;
