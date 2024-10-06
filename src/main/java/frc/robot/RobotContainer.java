@@ -82,18 +82,18 @@ public class RobotContainer {
 
     swerveSubsystem.setDefaultCommand(new DriveCommands(
             swerveSubsystem,
-            () -> primaryController.getLeftY() * DrivetrainConstants.drivingSpeedScalar,
-            () -> primaryController.getLeftX() * DrivetrainConstants.drivingSpeedScalar,
-            () -> primaryController.getRightX() * DrivetrainConstants.rotationSpeedScalar,
+            () -> Math.pow(primaryController.getLeftY(), 2)/1.5 * DrivetrainConstants.drivingSpeedScalar * primaryController.getLeftY()/Math.abs(primaryController.getLeftY()),
+            () -> Math.pow(primaryController.getLeftX(), 2)/1.5 * DrivetrainConstants.drivingSpeedScalar * primaryController.getLeftX()/Math.abs(primaryController.getLeftX()),
+            () -> Math.pow(primaryController.getRightX(), 2)/1.5 * DrivetrainConstants.rotationSpeedScalar * primaryController.getRightY()/Math.abs(primaryController.getRightY()),
             true,
             true
     ));
 
     new JoystickButton(primaryController, XboxController.Button.kRightBumper.value).whileTrue(
             new DriveCommands(swerveSubsystem,
-                    () -> primaryController.getLeftY() * DrivetrainConstants.drivingSpeedScalar / 2.5,
-                    () -> primaryController.getLeftX() * DrivetrainConstants.drivingSpeedScalar / 2.5,
-                    () -> primaryController.getRightX() * DrivetrainConstants.rotationSpeedScalar / 2.5,
+                    () -> Math.pow(primaryController.getLeftY(), 2) * DrivetrainConstants.drivingSpeedScalar / 4.5 * Math.signum(primaryController.getLeftY()),
+                    () -> Math.pow(primaryController.getLeftX(), 2) * DrivetrainConstants.drivingSpeedScalar / 4.5 * Math.signum(primaryController.getLeftX()),
+                    () -> Math.pow(primaryController.getRightX(), 2) * DrivetrainConstants.rotationSpeedScalar / 4.5 * Math.signum(primaryController.getRightY()),
                     true,
                     true
             )
@@ -107,7 +107,7 @@ public class RobotContainer {
             new RunCommand(() -> swerveSubsystem.zeroGyroAndOdometry())
     );
 //
-    new JoystickButton(primaryController, XboxController.Button.kX.value).whileTrue(
+    new POVButton(secondaryController, 270).whileTrue(
             new RotateToSpeakerAndDriveCommand(
                     swerveSubsystem,
                     () -> primaryController.getLeftY() * DrivetrainConstants.drivingSpeedScalar,
@@ -241,11 +241,11 @@ public class RobotContainer {
 //    );
 
     new POVButton(secondaryController, 0).whileTrue(
-            new RunCommand(() -> shooterSubsystem.setSpeed(1000))
+            new RunCommand(() -> shooterSubsystem.setSpeed(3500))
     ).whileFalse(
             new RunCommand(() -> shooterSubsystem.setSpeed(0))
     );
-
+//Please let me PR GitHub
 //
 //    new JoystickButton(secondaryController, XboxController.Button.kX.value).whileTrue(
 //            new RunCommand(() ->  shooterSubsystem.setBottomSpeed(6500))
